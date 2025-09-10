@@ -42,3 +42,10 @@ ENV PATH="$HOME/.local/bin:$PATH"
 RUN uv --version
 RUN node -v
 RUN npm -v
+
+RUN mkdir -p /code/MediaCrawler && wget https://github.com/freelw/MediaCrawler/archive/refs/tags/wangli_xhs_chrome_20250910.tar.gz \
+    && tar -zxvf wangli_xhs_chrome_20250910.tar.gz -C /code/MediaCrawler --strip-components 1 && rm wangli_xhs_chrome_20250910.tar.gz
+RUN cd /code/MediaCrawler \
+    && uv sync \
+    && uv run playwright install \
+    && uv pip install httpx[socks]
