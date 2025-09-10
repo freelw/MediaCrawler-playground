@@ -33,10 +33,8 @@ RUN echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesou
 
 # Update package list with the new repository and install Node.js 16
 RUN apt-get update && \
-    apt-get install -y nodejs && \
+    apt-get install -y nodejs libgl1-mesa-glx libglib2.0-0 libnss3 libnspr4 libdbus-1-3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libatspi2.0-0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libxkbcommon0 libpango-1.0-0 libcairo2 libasound2 wget && \
     rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update && apt-get install -y libgl1-mesa-glx libglib2.0-0 libnss3 libnspr4 libdbus-1-3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libatspi2.0-0 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libxkbcommon0 libpango-1.0-0 libcairo2 libasound2
 
 ENV HOME="/root"
 ENV PATH="$HOME/.local/bin:$PATH"
@@ -44,3 +42,10 @@ ENV PATH="$HOME/.local/bin:$PATH"
 RUN uv --version
 RUN node -v
 RUN npm -v
+
+RUN mkdir -p /code/MediaCrawler && wget https://github.com/freelw/MediaCrawler/archive/refs/tags/wangli_xhs_chrome_20250910.tar.gz \
+    && tar -zxvf wangli_xhs_chrome_20250910.tar.gz -C /code/MediaCrawler --strip-components 1 && rm wangli_xhs_chrome_20250910.tar.gz
+RUN cd /code/MediaCrawler \
+    && uv sync \
+    && uv run playwright install \
+    && uv pip install httpx[socks]
