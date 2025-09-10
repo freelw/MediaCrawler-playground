@@ -36,6 +36,8 @@ RUN apt-get update && \
     apt-get install -y nodejs && \
     rm -rf /var/lib/apt/lists/*
 
+ENV HOME="/root"
+ENV PATH="$HOME/.local/bin:$PATH"
 # Verify the installations
 RUN uv --version
 RUN node -v
