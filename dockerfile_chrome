@@ -1,0 +1,23 @@
+# Start from the official Ubuntu 22.04 base image
+FROM ubuntu:22.04
+
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+ARG ALL_PROXY
+
+# 将构建参数设置为环境变量
+ENV http_proxy=$HTTP_PROXY \
+    https_proxy=$HTTPS_PROXY \
+    all_proxy=$ALL_PROXY
+
+# Set environment variables to avoid interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && \
+    apt-get install wget xvfb -y && \
+    wget  https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    dpkg -i google-chrome-stable_current_amd64.deb || apt --fix-broken install -y && \
+    dpkg -i google-chrome-stable_current_amd64.deb && \
+    rm google-chrome-stable_current_amd64.deb && \
+    rm -rf /var/lib/apt/lists/*
+
